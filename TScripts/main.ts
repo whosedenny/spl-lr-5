@@ -109,3 +109,18 @@ class CompositeValidator<T> implements Validator<T> {
         return { isValid, errors };
     }
 }
+
+type Versioned<T extends BaseContent> = {
+    version: number;
+    createdAt: Date;
+    updatedAt: Date;
+    status: "draft" | "published" | "archived";
+    content: T;
+};
+
+type VersionedContentOperations<T extends BaseContent> = ContentOperations<T> &
+{
+    createVersion: ( id: string, data: Omit<T, "id" | "createdAt" | "updatedAt">) => Versioned<T>;
+    getVersionHistory: (id: string) => Versioned<T>[];
+    getVersionById: (id: string, version: number) => Versioned<T> | null;
+};
