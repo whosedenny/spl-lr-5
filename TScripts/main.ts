@@ -25,3 +25,18 @@ type ContentOperations<T extends BaseContent> = {
     update: (id: string, data: Partial<Omit<T, "id" | "createdAt">>) => T;
     delete: (id: string) => void;
 };
+
+type Role = 'admin' | 'editor' | 'viewer';
+
+type Permission = {
+    create: boolean;
+    read: boolean;
+    update: boolean;
+    delete: boolean;
+}
+
+type AccessControl<T extends BaseContent> = {
+    [R in Role]: {
+        [P in keyof T]?: Permission;
+    };
+};
